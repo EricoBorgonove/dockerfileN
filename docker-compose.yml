@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile-node
+    volumes:
+      - .:/var/www
+    ports:
+      - "3000:3000"
+
+  caddy:
+    build:
+      context: .
+      dockerfile: Dockerfile-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile-workspace
+    volumes:
+      - .:/var/www
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
